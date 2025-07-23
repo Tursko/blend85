@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.tursko.blend85.ui.theme.Blend85Theme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Blend85Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    CalculatorScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -31,17 +32,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun CalculatorScreen(modifier: Modifier = Modifier) {
+    Column {
+        Button(onClick = {}) {
+            Text("Calculate")
+        }
+        Text("E85 to Add: ")
+        Text("Pump gas to Add:")
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun CalculatorScreenPreview() {
     Blend85Theme {
-        Greeting("Android")
+        CalculatorScreen()
     }
 }
