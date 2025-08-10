@@ -1,6 +1,7 @@
 package com.tursko.blend85
 
 import android.os.Bundle
+import android.util.Log.i
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,75 +21,84 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
         setContent {
             Blend85Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CalculatorScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                //Scaffold() { innerPadding ->
+                    CalculatorScreen()
+                //}
             }
         }
     }
 }
 
 @Composable
-fun CalculatorScreen(modifier: Modifier = Modifier) {
-    var tankInputValue by remember { mutableStateOf("") }
-    var gasEthInputValue by remember { mutableStateOf("") }
-    var e85EthInputValue by remember { mutableStateOf("") }
-    var targetMixInputValue by remember { mutableStateOf("")}
-    var currFuelInputValue by remember { mutableStateOf("") }
-    var currMixInputValue by remember { mutableStateOf("")}
-    Column (modifier = Modifier.padding(20.dp)){
-        TextField(
-            value = tankInputValue,
-            onValueChange = { tankInputValue = it },
-            label = { Text("Tank size") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        TextField(
-            value = gasEthInputValue,
-            onValueChange = { gasEthInputValue = it },
-            label = { Text("Gas Ethanol Percentage") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        TextField(
-            value = e85EthInputValue,
-            onValueChange = { e85EthInputValue = it },
-            label = { Text("E85 Ethanol Percentage") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        TextField(
-            value = targetMixInputValue,
-            onValueChange = { targetMixInputValue = it },
-            label = { Text("Target Blend/Mix") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        TextField(
-            value = currFuelInputValue,
-            onValueChange = { currFuelInputValue = it },
-            label = { Text("Current Fuel Level Percentage") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        TextField(
-            value = currMixInputValue,
-            onValueChange = { currMixInputValue = it },
-            label = { Text("Current Ethanol Mix") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        Button(onClick = {}) {
-            Text("Calculate")
+fun CalculatorScreen(
+    calculatorViewModel: CalculatorViewModel = viewModel()
+) {
+    val uiState by calculatorViewModel.uiState.collectAsState()
+    Scaffold ()
+    { innerPadding ->
+        Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp)
+                    .fillMaxSize(),
+        ) {
+            TextField(
+                value = uiState.tankInputValue,
+                onValueChange = { calculatorViewModel.onUpdateTankInputValue(it) },
+                label = { Text("Tank size") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.gasEthInputValue,
+                onValueChange = { calculatorViewModel.onUpdateGasEthInputValue(it) },
+                label = { Text("Gas Ethanol %") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.e85EthInputValue,
+                onValueChange = { calculatorViewModel.onUpdateE85EthInputValue(it) },
+                label = { Text("E85 Ethanol %") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.targetMixInputValue,
+                onValueChange = { calculatorViewModel.onUpdateTargetMixInputValue(it) },
+                label = { Text("Target Blend/Mix") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.currFuelInputValue,
+                onValueChange = { calculatorViewModel.onUpdateCurrFuelInputValue(it) },
+                label = { Text("Current Fuel Level %") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.currMixInputValue,
+                onValueChange = { calculatorViewModel.onUpdateCurrMixInputValue(it) },
+                label = { Text("Current Ethanol Mix") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+
+            Button(
+                onClick = { calculatorViewModel.calculateBlend() }
+            ) {
+                Text("Calculate")
+            }
+
+            Text("E85 to Add: ${uiState.e85ToAdd}")
+            Text("Pump gas to Add: ${uiState.gasToAdd}")
         }
-        Text("E85 to Add: ")
-        Text("Pump gas to Add:")
     }
 }
 
