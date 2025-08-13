@@ -5,6 +5,7 @@ import android.util.Log.i
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -20,6 +21,7 @@ import com.tursko.blend85.ui.theme.Blend85Theme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,18 +47,23 @@ fun CalculatorScreen(
     calculatorViewModel: CalculatorViewModel = viewModel()
 ) {
     val uiState by calculatorViewModel.uiState.collectAsState()
-    Scaffold ()
+    Scaffold (
+        bottomBar = {
+            NavigationBar {  }
+        }
+    )
     { innerPadding ->
         Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(16.dp)
                     .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
                 value = uiState.tankInputValue,
                 onValueChange = { calculatorViewModel.onUpdateTankInputValue(it) },
-                label = { Text("Tank size") },
+                label = { Text("Gas Tank size") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             TextField(
@@ -97,7 +104,8 @@ fun CalculatorScreen(
             }
 
             Text("E85 to Add: ${uiState.e85ToAdd}")
-            Text("Pump gas to Add: ${uiState.gasToAdd}")
+            Text("Pump Gas to Add: ${uiState.gasToAdd}")
+            Text("Resulting Blend/Mix: ${uiState.targetMixResult}")
         }
     }
 }
