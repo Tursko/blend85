@@ -48,9 +48,9 @@ fun CalculatorScreen(
 ) {
     val uiState by calculatorViewModel.uiState.collectAsState()
     Scaffold (
-        bottomBar = {
-            NavigationBar {  }
-        }
+//        bottomBar = {
+//            NavigationBar {  }
+//        }
     )
     { innerPadding ->
         Column(

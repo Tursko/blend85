@@ -48,12 +48,12 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun calculateBlend() {
-        val tankInputValue = _uiState.value.tankInputValue.toDouble()
-        val gasEthInputValue = _uiState.value.gasEthInputValue.toDouble()
-        val e85EthInputValue = _uiState.value.e85EthInputValue.toDouble()
-        val targetMixInputValue = _uiState.value.targetMixInputValue.toDouble()
-        val currFuelInputValue = _uiState.value.currFuelInputValue.toDouble()
-        val currMixInputValue = _uiState.value.currMixInputValue.toDouble()
+        val tankInputValue = _uiState.value.tankInputValue.toDoubleOrNull() ?: 0.0
+        val gasEthInputValue = _uiState.value.gasEthInputValue.toDoubleOrNull() ?: 0.0
+        val e85EthInputValue = _uiState.value.e85EthInputValue.toDoubleOrNull() ?: 0.0
+        val targetMixInputValue = _uiState.value.targetMixInputValue.toDoubleOrNull() ?: 0.0
+        val currFuelInputValue = _uiState.value.currFuelInputValue.toDoubleOrNull() ?: 0.0
+        val currMixInputValue = _uiState.value.currMixInputValue.toDoubleOrNull() ?: 0.0
 
         val currentFuel = tankInputValue * currFuelInputValue
         val currentE85 = currentFuel * currMixInputValue
@@ -63,24 +63,18 @@ class CalculatorViewModel : ViewModel() {
         val e85ToAdd = (currentE85 + (tankInputValue - currentFuel) * gasEthInputValue - targetE85) / (gasEthInputValue - e85EthInputValue)
         val gasToAdd = tankInputValue - currentFuel - e85ToAdd
 
-        //_uiState.value = _uiState.value.copy(result = result.toString())
-        _uiState.value = _uiState.value.copy(
-            e85ToAdd = e85ToAdd.toString(),
-            gasToAdd = gasToAdd.toString(),
-            targetMixResult = targetMixInputValue.toString()
-        )
-//        if (e85ToAdd < 0 && gasToAdd < 0) {
-//            _uiState.value = _uiState.value.copy(
-//                e85ToAdd = e85ToAdd.toString(),
-//                gasToAdd = gasToAdd.toString(),
-//                targetMixResult = targetMixInputValue.toString()
-//            )
-//        } else {
-//            _uiState.value = _uiState.value.copy(
-//                e85ToAdd = "Error",
-//                gasToAdd = "Error",
-//                targetMixResult = "Error"
-//            )
-//        }
+        if (e85ToAdd < 0 && gasToAdd < 0) {
+            _uiState.value = _uiState.value.copy(
+                e85ToAdd = e85ToAdd.toString(),
+                gasToAdd = gasToAdd.toString(),
+                targetMixResult = targetMixInputValue.toString()
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                e85ToAdd = "Error",
+                gasToAdd = "Error",
+                targetMixResult = "Error"
+            )
+        }
     }
 }
