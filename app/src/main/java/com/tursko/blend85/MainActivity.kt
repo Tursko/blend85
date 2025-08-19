@@ -67,24 +67,6 @@ fun CalculatorScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             TextField(
-                value = uiState.gasEthInputValue,
-                onValueChange = { calculatorViewModel.onUpdateGasEthInputValue(it) },
-                label = { Text("Gas Ethanol %") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            TextField(
-                value = uiState.e85EthInputValue,
-                onValueChange = { calculatorViewModel.onUpdateE85EthInputValue(it) },
-                label = { Text("E85 Ethanol %") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            TextField(
-                value = uiState.targetMixInputValue,
-                onValueChange = { calculatorViewModel.onUpdateTargetMixInputValue(it) },
-                label = { Text("Target Blend/Mix") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            TextField(
                 value = uiState.currFuelInputValue,
                 onValueChange = { calculatorViewModel.onUpdateCurrFuelInputValue(it) },
                 label = { Text("Current Fuel Level %") },
@@ -97,10 +79,29 @@ fun CalculatorScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
+            TextField(
+                value = uiState.targetMixInputValue,
+                onValueChange = { calculatorViewModel.onUpdateTargetMixInputValue(it) },
+                label = { Text("Target Blend/Mix") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.e85EthInputValue,
+                onValueChange = { calculatorViewModel.onUpdateE85EthInputValue(it) },
+                label = { Text("E85 Ethanol %") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            TextField(
+                value = uiState.gasEthInputValue,
+                onValueChange = { calculatorViewModel.onUpdateGasEthInputValue(it) },
+                label = { Text("Gas Ethanol %") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+
             Button(
                 onClick = { calculatorViewModel.calculateBlend() }
             ) {
-                Text("Calculate")
+                Text("Calculate Blend")
             }
 
             Text("E85 to Add: ${uiState.e85ToAdd}")
