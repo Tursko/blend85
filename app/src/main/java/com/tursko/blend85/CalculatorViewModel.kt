@@ -49,32 +49,30 @@ class CalculatorViewModel : ViewModel() {
 
     fun calculateBlend() {
         val tankInputValue = _uiState.value.tankInputValue.toDoubleOrNull() ?: 0.0
-        val gasEthInputValue = _uiState.value.gasEthInputValue.toDoubleOrNull() ?: 0.0
-        val e85EthInputValue = _uiState.value.e85EthInputValue.toDoubleOrNull() ?: 0.0
-        val targetMixInputValue = _uiState.value.targetMixInputValue.toDoubleOrNull() ?: 0.0
-        val currFuelInputValue = _uiState.value.currFuelInputValue.toDoubleOrNull() ?: 0.0
-        val currMixInputValue = _uiState.value.currMixInputValue.toDoubleOrNull() ?: 0.0
+        val gasEthInputValue = ( _uiState.value.gasEthInputValue.toDoubleOrNull() ?: 0.0 ) / 100
+        val e85EthInputValue = ( _uiState.value.e85EthInputValue.toDoubleOrNull() ?: 0.0 ) / 100
+        val targetMixInputValue = ( _uiState.value.targetMixInputValue.toDoubleOrNull() ?: 0.0 ) / 100
+        val currFuelInputValue = ( _uiState.value.currFuelInputValue.toDoubleOrNull() ?: 0.0 ) / 100
+        val currMixInputValue = ( _uiState.value.currMixInputValue.toDoubleOrNull() ?: 0.0 ) / 100
 
         val currentFuel = tankInputValue * currFuelInputValue
         val currentE85 = currentFuel * currMixInputValue
         val targetE85 = tankInputValue * targetMixInputValue
 
-        //val e85Result = (currMixInputValue + (tankInputValue - currFuelInputValue) * gasEthInputValue - targetMixInputValue) / (gasEthInputValue - e85EthInputValue)
-        val e85ToAdd = (currentE85 + (tankInputValue - currentFuel) * gasEthInputValue - targetE85) / (gasEthInputValue - e85EthInputValue)
-        val gasToAdd = tankInputValue - currentFuel - e85ToAdd
-
-        if (e85ToAdd < 0 && gasToAdd < 0) {
-            _uiState.value = _uiState.value.copy(
-                e85ToAdd = e85ToAdd.toString(),
-                gasToAdd = gasToAdd.toString(),
-                targetMixResult = targetMixInputValue.toString()
-            )
-        } else {
-            _uiState.value = _uiState.value.copy(
-                e85ToAdd = "Error",
-                gasToAdd = "Error",
-                targetMixResult = "Error"
-            )
+        var e85ToAdd = (currentE85 + (tankInputValue - currentFuel) * gasEthInputValue - targetE85) / (gasEthInputValue - e85EthInputValue)
+        if (e85ToAdd <= 0 || e85ToAdd.isNaN()) {
+            e85ToAdd = 0.0
         }
+
+        var gasToAdd = ( tankInputValue - currentFuel ) - e85ToAdd
+        if (gasToAdd <= 0 || gasToAdd.isNaN()) {
+            gasToAdd = 0.0
+        }
+
+        _uiState.value = _uiState.value.copy(
+            e85ToAdd = e85ToAdd.toString(),
+            gasToAdd =gasToAdd.toString(),
+            targetMixResult = targetMixInputValue.toString()
+        )
     }
 }
