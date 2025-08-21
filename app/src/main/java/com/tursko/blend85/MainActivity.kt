@@ -19,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.tursko.blend85.ui.theme.Blend85Theme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.collectAsState
@@ -63,43 +65,65 @@ fun CalculatorScreen(
             TextField(
                 value = uiState.tankInputValue,
                 onValueChange = { calculatorViewModel.onUpdateTankInputValue(it) },
-                label = { Text("Gas Tank size") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                label = { Text("Gas Tank Size") },
+                singleLine = true,
+                suffix = { Text("Gal")},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
             )
             TextField(
                 value = uiState.currFuelInputValue,
                 onValueChange = { calculatorViewModel.onUpdateCurrFuelInputValue(it) },
-                label = { Text("Current Fuel Level %") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                label = { Text("Current Fuel Level") },
+                singleLine = true,
+                suffix = { Text("%")},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
+
             )
             TextField(
                 value = uiState.currMixInputValue,
                 onValueChange = { calculatorViewModel.onUpdateCurrMixInputValue(it) },
                 label = { Text("Current Ethanol Mix") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                singleLine = true,
+                suffix = { Text("%")},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
             )
+
+            HorizontalDivider(thickness = 3.dp)
 
             TextField(
                 value = uiState.targetMixInputValue,
                 onValueChange = { calculatorViewModel.onUpdateTargetMixInputValue(it) },
                 label = { Text("Target Blend/Mix") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                singleLine = true,
+                prefix = { Text("E")},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
             )
             TextField(
                 value = uiState.e85EthInputValue,
                 onValueChange = { calculatorViewModel.onUpdateE85EthInputValue(it) },
-                label = { Text("E85 Ethanol %") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                label = { Text("E85 Ethanol Percentage") },
+                singleLine = true,
+                suffix = { Text("%")},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
             )
             TextField(
                 value = uiState.gasEthInputValue,
                 onValueChange = { calculatorViewModel.onUpdateGasEthInputValue(it) },
-                label = { Text("Gas Ethanol %") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                label = { Text("Gas Ethanol Percentage") },
+                singleLine = true,
+                suffix = { Text("%")},
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
             )
 
             Button(
-                onClick = { calculatorViewModel.calculateBlend() }
+                onClick = { calculatorViewModel.calculateBlend() },
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Calculate Blend")
             }
