@@ -55,11 +55,13 @@ class CalculatorViewModel : ViewModel() {
         val currFuelInputValue = ( _uiState.value.currFuelInputValue.toDoubleOrNull() ?: 0.0 ) / 100
         val currMixInputValue = ( _uiState.value.currMixInputValue.toDoubleOrNull() ?: 0.0 ) / 100
 
-        val currentFuel = tankInputValue * currFuelInputValue
-        val currentE85 = currentFuel * currMixInputValue
-        val targetE85 = tankInputValue * targetMixInputValue
+        val currentFuel = (tankInputValue * currFuelInputValue) ?: 0.0
+        val currentE85 = (currentFuel * currMixInputValue) ?: 0.0
+        val targetE85 = (tankInputValue * targetMixInputValue) ?: 0.0
 
-        var e85ToAdd = (currentE85 + (tankInputValue - currentFuel) * gasEthInputValue - targetE85) / (gasEthInputValue - e85EthInputValue)
+        var e85ToAdd =
+            ((currentE85 + (tankInputValue - currentFuel) * gasEthInputValue - targetE85) / (gasEthInputValue - e85EthInputValue)) ?: 0.0
+
         if (e85ToAdd <= 0 || e85ToAdd.isNaN()) {
             e85ToAdd = 0.0
         }
@@ -70,9 +72,9 @@ class CalculatorViewModel : ViewModel() {
         }
 
         _uiState.value = _uiState.value.copy(
-            e85ToAdd = e85ToAdd.toString(),
-            gasToAdd =gasToAdd.toString(),
-            targetMixResult = targetMixInputValue.toString()
+            e85ToAdd = String.format("%.2fg", e85ToAdd),
+            gasToAdd = String.format("%.2fg", gasToAdd),
+            targetMixResult = String.format("E%.0f", targetMixInputValue*100)
         )
     }
 }

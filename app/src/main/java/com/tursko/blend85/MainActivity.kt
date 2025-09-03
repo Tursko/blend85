@@ -50,9 +50,9 @@ fun CalculatorScreen(
 ) {
     val uiState by calculatorViewModel.uiState.collectAsState()
     Scaffold (
-//        bottomBar = {
-//            NavigationBar {  }
-//        }
+        bottomBar = {
+            NavigationBar {  }
+        }
     )
     { innerPadding ->
         Column(
@@ -86,7 +86,7 @@ fun CalculatorScreen(
                 onValueChange = { calculatorViewModel.onUpdateCurrMixInputValue(it) },
                 label = { Text("Current Ethanol Mix") },
                 singleLine = true,
-                suffix = { Text("%")},
+                prefix = { Text("E")},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
