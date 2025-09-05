@@ -26,6 +26,9 @@ class CalculatorViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(CalculatorUiState())
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
 
+    private val _vehicles = MutableStateFlow(emptyList<Vehicle>())
+    val vehicles: StateFlow<List<Vehicle>> = _vehicles.asStateFlow()
+
     fun onUpdateTankInputValue(newValue: String) {
         _uiState.update { currentState -> currentState.copy(tankInputValue = newValue) }
     }
