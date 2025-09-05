@@ -1,6 +1,7 @@
 package com.tursko.blend85
 
 import androidx.lifecycle.ViewModel
+import com.tursko.blend85.data.Vehicle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +16,9 @@ data class CalculatorUiState(
     val currMixInputValue: String = "",
     val e85ToAdd: String = "",
     val gasToAdd: String = "",
-    val targetMixResult: String = ""
+    val targetMixResult: String = "",
+
+    val profiles: List<Vehicle> = emptyList()
 )
 
 class CalculatorViewModel : ViewModel() {
