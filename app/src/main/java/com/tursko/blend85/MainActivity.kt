@@ -67,7 +67,7 @@ fun CalculatorScreen(
     val uiState by calculatorViewModel.uiState.collectAsState()
     Scaffold (
         bottomBar = {
-            NavigationBar {  }
+//            NavigationBar {  }
         }
     )
     { innerPadding ->
@@ -148,10 +148,17 @@ fun CalculatorScreen(
                 Text("Calculate Blend")
             }
 
-            Text("E85 to Add: ${uiState.e85ToAdd}")
-            Text("Pump Gas to Add: ${uiState.gasToAdd}")
-            Text("Resulting Blend: ${uiState.targetMixResult}")
+            ResultSection(uiState.e85ToAdd, uiState.gasToAdd, uiState.targetMixResult)
         }
+    }
+}
+
+@Composable
+fun ResultSection(e85: String, gas: String, targetMix: String) {
+    if (e85.isNotBlank() && gas.isNotBlank() && targetMix.isNotBlank()) {
+        Text("E85 to Add: ${e85}g")
+        Text("Pump Gas to Add: ${gas}g")
+        Text("Resulting Blend: E${targetMix}")
     }
 }
 

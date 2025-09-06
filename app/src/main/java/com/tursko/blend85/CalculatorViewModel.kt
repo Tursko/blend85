@@ -78,9 +78,9 @@ class CalculatorViewModel : ViewModel() {
         }
 
         _uiState.value = _uiState.value.copy(
-            e85ToAdd = String.format("%.2fg", e85ToAdd),
-            gasToAdd = String.format("%.2fg", gasToAdd),
-            targetMixResult = String.format("E%.0f", targetMixInputValue*100)
+            e85ToAdd = String.format("%.2f", e85ToAdd),
+            gasToAdd = String.format("%.2f", gasToAdd),
+            targetMixResult = String.format("%.0f", targetMixInputValue*100)
         )
     }
 }

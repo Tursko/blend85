@@ -6,12 +6,15 @@ import org.junit.Assert.*
 
 class CalculatorViewModelTest {
     @Test
-    fun `calculateResult should handle empty inputs`() {
+    fun calculateWithEmptyValues() {
         val viewModel = CalculatorViewModel()
+        val expectedValue1 = "0.00"
+        val expectedValue2 = "0"
 
         viewModel.calculateBlend()
 
-        assertEquals("0.0", viewModel.uiState.value.e85ToAdd)
-        assertEquals("0.0", viewModel.uiState.value.gasToAdd)
+        assertEquals(expectedValue1, viewModel.uiState.value.e85ToAdd)
+        assertEquals(expectedValue1, viewModel.uiState.value.gasToAdd)
+        assertEquals(expectedValue2, viewModel.uiState.value.targetMixResult)
     }
 }
