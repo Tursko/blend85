@@ -1,5 +1,7 @@
-package com.tursko.blend85
+package com.tursko.blend85.data
 
+import com.tursko.blend85.data.Vehicle
+import com.tursko.blend85.data.VehicleDao
 import kotlinx.coroutines.flow.Flow
 
 class VehicleRepository (private val vehicleDao: VehicleDao) {

@@ -1,7 +1,8 @@
 package com.tursko.blend85
 
+import android.R.attr.enabled
+import android.R.attr.type
 import android.os.Bundle
-import android.util.Log.i
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,23 +13,38 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.tursko.blend85.ui.theme.Blend85Theme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuAnchorType.Companion.PrimaryEditable
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlin.math.exp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +67,7 @@ fun CalculatorScreen(
     val uiState by calculatorViewModel.uiState.collectAsState()
     Scaffold (
         bottomBar = {
-            NavigationBar {  }
+//            NavigationBar {  }
         }
     )
     { innerPadding ->
@@ -62,6 +78,10 @@ fun CalculatorScreen(
                     .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            VehicleDropDown(
+                modifier = Modifier.fillMaxWidth()
+            )
+
             TextField(
                 value = uiState.tankInputValue,
                 onValueChange = { calculatorViewModel.onUpdateTankInputValue(it) },
@@ -74,7 +94,7 @@ fun CalculatorScreen(
             TextField(
                 value = uiState.currFuelInputValue,
                 onValueChange = { calculatorViewModel.onUpdateCurrFuelInputValue(it) },
-                label = { Text("Current Fuel Level") },
+                label = { Text("Current Tank Level") },
                 singleLine = true,
                 suffix = { Text("%")},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -84,7 +104,7 @@ fun CalculatorScreen(
             TextField(
                 value = uiState.currMixInputValue,
                 onValueChange = { calculatorViewModel.onUpdateCurrMixInputValue(it) },
-                label = { Text("Current Ethanol Mix") },
+                label = { Text("Current Ethanol Blend") },
                 singleLine = true,
                 prefix = { Text("E")},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -96,7 +116,7 @@ fun CalculatorScreen(
             TextField(
                 value = uiState.targetMixInputValue,
                 onValueChange = { calculatorViewModel.onUpdateTargetMixInputValue(it) },
-                label = { Text("Target Blend/Mix") },
+                label = { Text("Target Blend") },
                 singleLine = true,
                 prefix = { Text("E")},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -128,9 +148,67 @@ fun CalculatorScreen(
                 Text("Calculate Blend")
             }
 
-            Text("E85 to Add: ${uiState.e85ToAdd}")
-            Text("Pump Gas to Add: ${uiState.gasToAdd}")
-            Text("Resulting Blend/Mix: ${uiState.targetMixResult}")
+            ResultSection(uiState.e85ToAdd, uiState.gasToAdd, uiState.targetMixResult)
+        }
+    }
+}
+
+@Composable
+fun ResultSection(e85: String, gas: String, targetMix: String) {
+    if (e85.isNotBlank() && gas.isNotBlank() && targetMix.isNotBlank()) {
+        Text("E85 to Add: ${e85}g")
+        Text("Pump Gas to Add: ${gas}g")
+        Text("Resulting Blend: E${targetMix}")
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VehicleDropDown(modifier: Modifier = Modifier) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        TextField(
+            value = "Select a Profile",
+            onValueChange = {},
+            readOnly = true,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            modifier = Modifier.menuAnchor(PrimaryEditable, true).fillMaxWidth()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("test") },
+                onClick = {}
+            )
+
+        }
+    }
+}
+
+@Composable
+fun VolumeUnitSegmentedButton (modifier: Modifier = Modifier) {
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    val options = listOf("Gallons", "Liters")
+
+    SingleChoiceSegmentedButtonRow {
+        options.forEachIndexed { index, label ->
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(
+                    index = index,
+                    count = options.size
+                ),
+                onClick = { selectedIndex = index },
+                selected = index == selectedIndex,
+                label = { Text(label) }
+            )
         }
     }
 }

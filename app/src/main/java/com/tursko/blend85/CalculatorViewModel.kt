@@ -1,6 +1,7 @@
 package com.tursko.blend85
 
 import androidx.lifecycle.ViewModel
+import com.tursko.blend85.data.Vehicle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,13 +16,18 @@ data class CalculatorUiState(
     val currMixInputValue: String = "",
     val e85ToAdd: String = "",
     val gasToAdd: String = "",
-    val targetMixResult: String = ""
+    val targetMixResult: String = "",
+
+    val profiles: List<Vehicle> = emptyList()
 )
 
 class CalculatorViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalculatorUiState())
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
+
+    private val _vehicles = MutableStateFlow(emptyList<Vehicle>())
+    val vehicles: StateFlow<List<Vehicle>> = _vehicles.asStateFlow()
 
     fun onUpdateTankInputValue(newValue: String) {
         _uiState.update { currentState -> currentState.copy(tankInputValue = newValue) }
@@ -49,32 +55,20 @@ class CalculatorViewModel : ViewModel() {
 
     fun calculateBlend() {
         val tankInputValue = _uiState.value.tankInputValue.toDoubleOrNull() ?: 0.0
-        val gasEthInputValue = ( _uiState.value.gasEthInputValue.toDoubleOrNull() ?: 0.0 ) / 100
-        val e85EthInputValue = ( _uiState.value.e85EthInputValue.toDoubleOrNull() ?: 0.0 ) / 100
-        val targetMixInputValue = ( _uiState.value.targetMixInputValue.toDoubleOrNull() ?: 0.0 ) / 100
-        val currFuelInputValue = ( _uiState.value.currFuelInputValue.toDoubleOrNull() ?: 0.0 ) / 100
-        val currMixInputValue = ( _uiState.value.currMixInputValue.toDoubleOrNull() ?: 0.0 ) / 100
+        val gasEthInputValue = ( _uiState.value.gasEthInputValue.toDoubleOrNull() ?: 0.0 )
+        val e85EthInputValue = ( _uiState.value.e85EthInputValue.toDoubleOrNull() ?: 0.0 )
+        val targetMixInputValue = ( _uiState.value.targetMixInputValue.toDoubleOrNull() ?: 0.0 )
+        val currFuelInputValue = ( _uiState.value.currFuelInputValue.toDoubleOrNull() ?: 0.0 )
+        val currMixInputValue = ( _uiState.value.currMixInputValue.toDoubleOrNull() ?: 0.0 )
 
-        val currentFuel = (tankInputValue * currFuelInputValue) ?: 0.0
-        val currentE85 = (currentFuel * currMixInputValue) ?: 0.0
-        val targetE85 = (tankInputValue * targetMixInputValue) ?: 0.0
-
-        var e85ToAdd =
-            ((currentE85 + (tankInputValue - currentFuel) * gasEthInputValue - targetE85) / (gasEthInputValue - e85EthInputValue)) ?: 0.0
-
-        if (e85ToAdd <= 0 || e85ToAdd.isNaN()) {
-            e85ToAdd = 0.0
-        }
-
-        var gasToAdd = ( tankInputValue - currentFuel ) - e85ToAdd
-        if (gasToAdd <= 0 || gasToAdd.isNaN()) {
-            gasToAdd = 0.0
-        }
+        val calculator = BlendCalculator()
+        val result = calculator.calculateBlend(tankInputValue, currFuelInputValue, currMixInputValue,
+            targetMixInputValue, e85EthInputValue, gasEthInputValue)
 
         _uiState.value = _uiState.value.copy(
-            e85ToAdd = String.format("%.2fg", e85ToAdd),
-            gasToAdd = String.format("%.2fg", gasToAdd),
-            targetMixResult = String.format("E%.0f", targetMixInputValue*100)
+            e85ToAdd = String.format("%.2f", result.e85ToAdd),
+            gasToAdd = String.format("%.2f", result.gasToAdd),
+            targetMixResult = String.format("%.0f", result.targetMixResult)
         )
     }
 }
