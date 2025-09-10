@@ -78,9 +78,9 @@ fun CalculatorScreen(
                     .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            VehicleDropDown(
-                modifier = Modifier.fillMaxWidth()
-            )
+//            VehicleDropDown(
+//                modifier = Modifier.fillMaxWidth()
+//            )
 
             TextField(
                 value = uiState.tankInputValue,
@@ -173,7 +173,7 @@ fun VehicleDropDown(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         TextField(
-            value = "Select a Profile",
+            value = "Vehicle",
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
