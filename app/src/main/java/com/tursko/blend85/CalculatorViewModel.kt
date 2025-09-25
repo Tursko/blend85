@@ -21,7 +21,7 @@ data class CalculatorUiState(
     val profiles: List<Vehicle> = emptyList()
 )
 
-class CalculatorViewModel : ViewModel() {
+class CalculatorViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(CalculatorUiState())
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
