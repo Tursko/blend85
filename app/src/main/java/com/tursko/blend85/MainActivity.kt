@@ -1,5 +1,6 @@
 package com.tursko.blend85
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -38,12 +39,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        applicationContext
+        val settingsViewModel = SettingsViewModel(SettingsDataStore(applicationContext))
+
         setContent {
             Blend85Theme {
                 //Scaffold() { innerPadding ->
@@ -56,10 +65,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CalculatorScreen(
-    calculatorViewModel: CalculatorViewModel = viewModel()
+    calculatorViewModel: CalculatorViewModel = viewModel(),
+    //settingsViewModel: SettingsViewModel
 ) {
     val uiState by calculatorViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+
     Scaffold (
         bottomBar = {
 //            NavigationBar {  }
@@ -136,6 +147,17 @@ fun CalculatorScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+
+//            val test = settingsViewModel.x.collectAsState(initial = "")
+//            TextField(
+//                value = test.value,
+//                onValueChange = { settingsViewModel.updateDefaultTargetEthanol(it) },
+//                label = { Text("Testing") },
+//                singleLine = true,
+//                suffix = { Text("%")},
+//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+//                modifier = Modifier.fillMaxWidth()
+//            )
 
             Button(
                 onClick = { calculatorViewModel.calculateBlend() },
