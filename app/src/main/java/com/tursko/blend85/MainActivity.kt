@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Blend85Theme {
                 //Scaffold() { innerPadding ->
-                    CalculatorScreen(settingsViewModel = settingsViewModel)
+                    CalculatorScreen()
                 //}
             }
         }
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CalculatorScreen(
     calculatorViewModel: CalculatorViewModel = viewModel(),
-    settingsViewModel: SettingsViewModel
+    //settingsViewModel: SettingsViewModel
 ) {
     val uiState by calculatorViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -148,16 +148,16 @@ fun CalculatorScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            val test = settingsViewModel.x.collectAsState(initial = "")
-            TextField(
-                value = test.value,
-                onValueChange = { settingsViewModel.updateDefaultTargetEthanol(it) },
-                label = { Text("Testing") },
-                singleLine = true,
-                suffix = { Text("%")},
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
+//            val test = settingsViewModel.x.collectAsState(initial = "")
+//            TextField(
+//                value = test.value,
+//                onValueChange = { settingsViewModel.updateDefaultTargetEthanol(it) },
+//                label = { Text("Testing") },
+//                singleLine = true,
+//                suffix = { Text("%")},
+//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+//                modifier = Modifier.fillMaxWidth()
+//            )
 
             Button(
                 onClick = { calculatorViewModel.calculateBlend() },
@@ -231,10 +231,10 @@ fun VolumeUnitSegmentedButton (modifier: Modifier = Modifier) {
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun CalculatorScreenPreview() {
-//    Blend85Theme {
-//        CalculatorScreen()
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun CalculatorScreenPreview() {
+    Blend85Theme {
+        CalculatorScreen()
+    }
+}
